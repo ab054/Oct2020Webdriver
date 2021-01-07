@@ -1,3 +1,4 @@
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -18,6 +19,44 @@ public class GoogleSearchTest {
         openBrowser();
         navigateToMainPage();
         typeQuery();
+        submitQuery();
+        waitFor(3);
+        boolean statsDisplayed = isStatsDisplayed();
+        Assert.assertTrue(statsDisplayed);
+        verifySearchResults();
+    }
+
+    private void waitFor(int amountOfSeconds) {
+        try {
+            Thread.sleep(amountOfSeconds * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void verifySearchResults() {
+        WebElement resultsElement = driver.findElement(By.id("result-stats"));
+
+        String text = resultsElement.getText();
+
+        String[] arrayOfStrings = text.split(" ");
+        String secondElement = arrayOfStrings[1];
+        secondElement = secondElement.replace(",", "");
+
+        int number = Integer.parseInt(secondElement);
+
+        boolean isLargeNumber = number > 1000;
+        Assert.assertTrue(isLargeNumber);
+    }
+
+    private boolean isStatsDisplayed() {
+        WebElement resultsElement = driver.findElement(By.id("result-stats"));
+        return resultsElement.isDisplayed();
+    }
+
+    private void submitQuery() {
+        WebElement element = driver.findElement(By.name("q"));
+        element.submit();
     }
 
     private void typeQuery() {

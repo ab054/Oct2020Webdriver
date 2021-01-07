@@ -218,4 +218,24 @@ public class JavaEx01 {
         System.out.println("a=" + a);
         System.out.println("b=" + b);
     }
+
+    @Test
+    public void testMyBike() {
+        Bicycle myBike01 = new Bicycle("green");
+
+        myBike01.ride();
+
+        String bikesColor = myBike01.getColor();
+
+        Assert.assertEquals(bikesColor, "green");
+    }
+
+    @Test
+    public void testMountainBike() {
+        MountainBike myNewBike = new MountainBike("blue");
+
+        myNewBike.jump();
+
+        Assert.assertEquals(myNewBike.getColor(), "blue");
+    }
 }
