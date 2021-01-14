@@ -3,6 +3,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
 public class GoogleSearchTest {
@@ -20,18 +22,16 @@ public class GoogleSearchTest {
         navigateToMainPage();
         typeQuery();
         submitQuery();
-        waitFor(3);
+        //waitFor(3);
+        waitForElement(By.id("result-stats"));
         boolean statsDisplayed = isStatsDisplayed();
         Assert.assertTrue(statsDisplayed);
         verifySearchResults();
     }
 
-    private void waitFor(int amountOfSeconds) {
-        try {
-            Thread.sleep(amountOfSeconds * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    private void waitForElement(By elementById) {
+        WebDriverWait wait = new WebDriverWait(driver, 20);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(elementById));
     }
 
     private void verifySearchResults() {
