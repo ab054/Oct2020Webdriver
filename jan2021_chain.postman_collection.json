@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "afa9b0f7-304e-4338-9912-fb799e1e99a4",
+		"name": "jan2021_chain",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "https://maps.googleapis.com/maps/api/geocode/json?address=Portnov Computer School&key={{GoogleApiKey}}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let firstObject = pm.response.json().results[0]",
+							"",
+							"let jan21_myLAT = firstObject.geometry.location.lat",
+							"let jan21_myLNG = firstObject.geometry.location.lng",
+							"",
+							"",
+							"pm.environment.set(\"jan21_myLAT\", jan21_myLAT);",
+							"pm.environment.set(\"jan21_myLNG\", jan21_myLNG);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://maps.googleapis.com/maps/api/geocode/json?address=Portnov Computer School&key={{GoogleApiKey}}",
+					"protocol": "https",
+					"host": [
+						"maps",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"maps",
+						"api",
+						"geocode",
+						"json"
+					],
+					"query": [
+						{
+							"key": "address",
+							"value": "Portnov Computer School"
+						},
+						{
+							"key": "key",
+							"value": "{{GoogleApiKey}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={{GoogleApiKey}}&location=37.3971026,-122.1065369&radius=1000&keyword=sushi",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let allObjects = pm.response.json().results",
+							"",
+							"let array = []",
+							"",
+							"for (let i = 0; i < allObjects.length; i++){",
+							"    array.push(",
+							"        {",
+							"            \"name\": allObjects[i].name,",
+							"            \"vicinity\": allObjects[i].vicinity,",
+							"            \"rating\": allObjects[i].rating",
+							"        }",
+							"    )",
+							"}",
+							"",
+							"let str_value = JSON.stringify(array)",
+							"",
+							"pm.environment.set(\"array\", str_value);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://maps.googleapis.com/maps/api/place/nearbysearch/json?key={{GoogleApiKey}}&location=37.3971026,-122.1065369&radius=1000&keyword=sushi",
+					"protocol": "https",
+					"host": [
+						"maps",
+						"googleapis",
+						"com"
+					],
+					"path": [
+						"maps",
+						"api",
+						"place",
+						"nearbysearch",
+						"json"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{GoogleApiKey}}"
+						},
+						{
+							"key": "location",
+							"value": "37.3971026,-122.1065369"
+						},
+						{
+							"key": "radius",
+							"value": "1000"
+						},
+						{
+							"key": "keyword",
+							"value": "sushi"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://api.twitter.com/1.1/users/show.json?screen_name=alfamiliya",
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "consumerKey",
+							"value": "{{Twitter1}}",
+							"type": "string"
+						},
+						{
+							"key": "tokenSecret",
+							"value": "{{Twitter4}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{Twitter3}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{Twitter2}}",
+							"type": "string"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.twitter.com/1.1/users/show.json?screen_name=alfamiliya",
+					"protocol": "https",
+					"host": [
+						"api",
+						"twitter",
+						"com"
+					],
+					"path": [
+						"1.1",
+						"users",
+						"show.json"
+					],
+					"query": [
+						{
+							"key": "screen_name",
+							"value": "alfamiliya"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://api.twitter.com/1.1/direct_messages/events/new.json",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let allRecomendations = pm.environment.get(\"array\");",
+							"",
+							"let recomendationsJson = JSON.parse(allRecomendations)",
+							"",
+							"",
+							"",
+							"let index = Math.floor(Math.random() * Math.floor(recomendationsJson.length)) ",
+							"",
+							"let jan2021_recomendation = recomendationsJson[index]",
+							"",
+							"let str_recomendation = \"You should try \" + jan2021_recomendation.name",
+							"",
+							"pm.environment.set(\"jan2021_recomendation\", str_recomendation);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "oauth1",
+					"oauth1": [
+						{
+							"key": "tokenSecret",
+							"value": "{{Twitter4}}",
+							"type": "string"
+						},
+						{
+							"key": "token",
+							"value": "{{Twitter3}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerSecret",
+							"value": "{{Twitter2}}",
+							"type": "string"
+						},
+						{
+							"key": "consumerKey",
+							"value": "{{Twitter1}}",
+							"type": "string"
+						},
+						{
+							"key": "addParamsToHeader",
+							"value": true,
+							"type": "boolean"
+						},
+						{
+							"key": "signatureMethod",
+							"value": "HMAC-SHA1",
+							"type": "string"
+						},
+						{
+							"key": "version",
+							"value": "1.0",
+							"type": "string"
+						},
+						{
+							"key": "addEmptyParamsToSign",
+							"value": false,
+							"type": "boolean"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n   \"event\":{\n      \"type\":\"message_create\",\n      \"message_create\":{\n         \"target\":{\n            \"recipient_id\":\"3227681222\"\n         },\n         \"message_data\":{\n            \"text\": \"{{jan2021_recomendation}}\"\n         }\n      }\n   }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://api.twitter.com/1.1/direct_messages/events/new.json",
+					"protocol": "https",
+					"host": [
+						"api",
+						"twitter",
+						"com"
+					],
+					"path": [
+						"1.1",
+						"direct_messages",
+						"events",
+						"new.json"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
