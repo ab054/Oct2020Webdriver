@@ -1,80 +1,35 @@
 import org.junit.Assert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Test;
 
-public class GoogleSearchTest {
-
-    WebDriver driver;
-
+public class GoogleSearchTest extends BaseTest {
     //1. Open the browser
     //2. Navigate to the main Google page
     //3. Type the query
     //4. Submit the query
     //5. Verify the results page
     @Test
-    public void testName() {
-        openBrowser();
-        navigateToMainPage();
-        typeQuery();
-        submitQuery();
-        //waitFor(3);
-        waitForElement(By.id("result-stats"));
-        boolean statsDisplayed = isStatsDisplayed();
+    public void testPerformSearchVerifyResult() {
+        String query = "Portnov Computer School";
+
+        pom.mainPage.open();
+        pom.mainPage.typeQuery(query);
+        pom.mainPage.submitQuery();
+
+        boolean statsDisplayed = pom.resultsPage.isStatsDisplayed();
         Assert.assertTrue(statsDisplayed);
-        verifySearchResults();
+        pom.resultsPage.verifySearchResults();
     }
 
-    private void waitForElement(By elementById) {
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(elementById));
-    }
+    @Test
+    public void testPerformWrongSearchVerifyError() {
+        String query = "12341234ferfsrfv324f324f3f4";
 
-    private void verifySearchResults() {
-        WebElement resultsElement = driver.findElement(By.id("result-stats"));
+        pom.mainPage.open();
+        pom.mainPage.typeQuery(query);
+        pom.mainPage.submitQuery();
 
-        String text = resultsElement.getText();
+        boolean noStatsDisplayed = pom.resultsPage.noStatsDisplayed();
 
-        String[] arrayOfStrings = text.split(" ");
-        String secondElement = arrayOfStrings[1];
-        secondElement = secondElement.replace(",", "");
-
-        int number = Integer.parseInt(secondElement);
-
-        boolean isLargeNumber = number > 1000;
-        Assert.assertTrue(isLargeNumber);
-    }
-
-    private boolean isStatsDisplayed() {
-        WebElement resultsElement = driver.findElement(By.id("result-stats"));
-        return resultsElement.isDisplayed();
-    }
-
-    private void submitQuery() {
-        WebElement element = driver.findElement(By.name("q"));
-        element.submit();
-    }
-
-    private void typeQuery() {
-        String selector = "#tsf > div:nth-child(2) > div.A8SBwf > div.RNNXgb > div > div.a4bIc > input";
-        String xpathValue = "/html/body/div[1]/div[3]/form/div[2]/div[1]/div[1]/div/div[2]/input";
-        String tagName = "input";
-        String name = "q";
-
-        WebElement element = driver.findElement(By.name(name));
-        element.sendKeys("Portnov Computer School");
-    }
-
-    private void navigateToMainPage() {
-        driver.get("https://www.google.com/");
-    }
-
-    private void openBrowser() {
-        System.setProperty("webdriver.gecko.driver", "src/test/resources/driver/macOs/geckodriver");
-        driver = new FirefoxDriver();
+        Assert.assertTrue(noStatsDisplayed);
     }
 }

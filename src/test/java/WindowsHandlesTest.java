@@ -56,13 +56,14 @@ public class WindowsHandlesTest {
         boolean isSwitched = switchToWindow("New Window");
         Assert.assertEquals(isSwitched, true);
         verifyTitle("New Window");
-        verifyPageSource("New Window");
+        boolean textPresented = verifyPageSource("New Window");
+        Assert.assertEquals(textPresented, true);
     }
 
-    private void verifyPageSource(String textToVerify) {
+    private boolean verifyPageSource(String textToVerify) {
         String pageSource = driver.getPageSource();
         boolean textPresented = pageSource.contains(textToVerify);
-        Assert.assertEquals(textPresented, true);
+        return textPresented;
     }
 
     private void waitForAmountOfWindows(final int numberOfWindows) {
@@ -84,14 +85,12 @@ public class WindowsHandlesTest {
                 result = true;
             }
         }
-
         return result;
     }
 
     private void switchToNewWindow() {
         Set<String> windowHandles = driver.getWindowHandles();
         String[] strings = windowHandles.toArray(new String[]{});
-
 
         String handleOfSecondWindow = strings[1];
         driver.switchTo().window(handleOfSecondWindow);
@@ -106,7 +105,6 @@ public class WindowsHandlesTest {
     private void clickOnLink() {
         WebElement linkElement = driver.findElement(By.linkText("Click Here"));
         linkElement.click();
-
     }
 
     private void navigateToHandlesPage() {
