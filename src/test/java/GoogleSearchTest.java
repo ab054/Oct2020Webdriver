@@ -1,4 +1,6 @@
 import org.junit.Assert;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 public class GoogleSearchTest extends BaseTest {
@@ -13,6 +15,39 @@ public class GoogleSearchTest extends BaseTest {
 
         pom.mainPage.open();
         pom.mainPage.typeQuery(query);
+        pom.mainPage.submitQuery();
+
+        boolean statsDisplayed = pom.resultsPage.isStatsDisplayed();
+        Assert.assertTrue(statsDisplayed);
+        pom.resultsPage.verifySearchResults();
+    }
+
+    @Parameters({"queryParamKey"})
+    @Test
+    public void testSearchWithParameters(String queryParameter) {
+        pom.mainPage.open();
+        pom.mainPage.typeQuery(queryParameter);
+        pom.mainPage.submitQuery();
+
+        boolean statsDisplayed = pom.resultsPage.isStatsDisplayed();
+        Assert.assertTrue(statsDisplayed);
+        pom.resultsPage.verifySearchResults();
+    }
+
+    @DataProvider(name = "dataForGoogleSearch")
+    public Object[][] createData1() {
+        //TODO: read an external Excel file and use its data for data driven test scenario
+        return new Object[][]{
+                {"Portnov Computer School"},
+                {"asdfsdfasdfasdfsadf"},
+                {"dfsdfdfafsf"},
+        };
+    }
+
+    @Test(dataProvider = "dataForGoogleSearch")
+    public void testSearchWithDataProvider(String queryParameter) {
+        pom.mainPage.open();
+        pom.mainPage.typeQuery(queryParameter);
         pom.mainPage.submitQuery();
 
         boolean statsDisplayed = pom.resultsPage.isStatsDisplayed();

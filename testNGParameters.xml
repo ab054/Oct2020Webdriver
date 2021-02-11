@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+
+<suite name="MySuiteFromXML" verbose="1">
+    <parameter name="queryParamKey" value="Firefox"/>
+    <test name="Google Positive Test">
+        <classes>
+            <class name="GoogleSearchTest">
+                <methods>
+                    <include name="testSearchWithParameters"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
